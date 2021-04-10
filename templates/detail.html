@@ -11,5 +11,12 @@
                 <button>Delete</button>
             </form>        
     </div>
+    <div>
+        <h2>Posts</h2>
+        {% for post in user.posts %}
+        <li><a href="/post_detail/{{post.id}}">{{post.title}} {{post.id}}</a></li>
+        {% endfor %}
+        <a href="/add_post/{{user.id}}"><button>Add Post</button></a> 
+    </div>
 </section>
 {% endblock %}
