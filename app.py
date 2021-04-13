@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, PostTag, Tag
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -17,7 +17,8 @@ db.create_all()
 def list_users():
     """shows users in db"""
     users = User.query.all()
-    return render_template('base.html', users=users)
+    tags = Tag.query.all()
+    return render_template('base.html', users=users, tags=tags)
 
 @app.route('/<int:user_id>')
 def detail(user_id):
@@ -69,17 +70,19 @@ def delete(user_id):
 @app.route('/add_post/<int:user_id>')
 def add_post_form(user_id):
     user = User.query.get_or_404(user_id)
-    return render_template('add_post.html', user=user)
+    tags = Tag.query.all()
+    return render_template('add_post.html', user=user, tags=tags)
 
 @app.route('/add_post/<int:user_id>', methods=["POST"])
 def add_post(user_id):
     title = request.form["title"]
     content = request.form["post"]
+    tags = request.form.getlist("tags")
     
 
     user = User.query.get_or_404(user_id)
 
-    new_post = Post(title=title, content=content, user_id=user_id)
+    new_post = Post(title=title, content=content, user_id=user_id, tags=tags)
     db.session.add(new_post)
     db.session.commit()
     return redirect('/')
@@ -121,6 +124,35 @@ def delete_post(post_id):
    db.session.commit()
 
    return redirect('/')
+
+@app.route('/tag_form')
+def tag_form():
+    return render_template('tag_form.html')
+
+@app.route('/tag_form', methods=['POST'])
+def tag():
+
+    tag_input = request.form["tag"]
+    new_tag = Tag(name=tag_input)
+    db.session.add(new_tag)
+    db.session.commit()
+    
+    return redirect('/')
+
+@app.route('/edit_tags')
+def edit_tags_form():
+    tags = Tag.query.all()
+    return render_template('edit_tags.html', tags=tags)
+
+@app.route('/edit_tags', methods=["POST"])
+def edit_tags():
+    tag_ids = request.form.getlist("id")
+    for id in tag_ids:
+        tag = Tag.query.get_or_404(id)
+        tag.query.filter_by(id=id).delete()
+        db.session.commit()
+    
+    return redirect('/')
 
 
 

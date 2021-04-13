@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title%}<title>Post Detail</title>{% endblock%}
+{% block content %}
+<h1>Edit Tags</h1>
+<form action="" method="POST">
+{% for tag in tags%}
+<input type="checkbox" name="id" value="{{tag.id}}">{{tag.name}}
+{% endfor %}
+<button>Delete</button>
+</form>
+{% endblock %}

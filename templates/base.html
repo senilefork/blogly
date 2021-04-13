@@ -15,6 +15,14 @@
         {% endfor %}
     </ul>
     <a href="/add_user"><button>Add User</button></a>
+    <h1>Tags</h1>
+    <ul>
+        {% for tag in tags%}
+        <li>{{tag.name}}</li>
+        {% endfor %}
+    </ul>
+    <a href="/tag_form"><button>Add Tag</button></a>
+    <a href="/edit_tags"><button>Edit Tags</button></a>
     {% endblock %}
 </body>
 </html>

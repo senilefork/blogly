@@ -4,13 +4,15 @@
 <section>
     <h1>{{post.title}}</h1>
     <p>{{post.content}}</p>
-    <p style="font-style: italic">By {{user.first_name}} {{user.last_name}}</p>
+    <p style="font-style: italic">By {{user.first_name}} {{user.last_name}} {{post.post_date}}</p>
     <a href="/"><button>Cancel</button></a>
     <a href="/edit_post/{{post.id}}"><button>Edit</button></a>
     <form action="/delete_post/{{post.id}}" method="POST">
         <button>Delete</button>
     </form>
-    
-    
+    <h2>Tags</h2>
+    {% for tag in post.tags%}
+    <p>{{tag}}</p>
+    {% endfor %}  
 </section>
 {% endblock %}

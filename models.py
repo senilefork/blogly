@@ -38,11 +38,28 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     post_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    tags = db.Column(db.ARRAY(db.String))
+
+    tag = db.relationship('Tag', secondary='posttags', backref='posts')
 
     def edit_post(self, title, content):
 
         self.title = title
         self.content = content
+
+class PostTag(db.Model):
+    __tablename__ = "posttags"
+
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+    
+class Tag(db.Model):
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, nullable=False)
+
+
 
     
 
